@@ -1,0 +1,106 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  height: 2000px;
+  text-align: center;
+}
+
+.home > div {
+  height: 25%;
+}
+
+.one > div {
+  height: 25%;
+}
+
+.two > div {
+  height: 25%;
+}
+
+.howToLearn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.howToLearn div {
+  display: flex;
+  flex-direction: column;
+  height: 200px;
+}
+
+.languages {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.languages div {
+  text-align: center;
+  flex: 33%;
+  height: 100px;
+}
+
+.three div {
+  height: 33%;
+}
+
+.four {
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonies {
+  height: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  flex: 3;
+}
+
+.testimony {
+  height: 100px;
+  display: flex;
+  flex: 50%;
+}
+
+.testimonyImage {
+  border: solid;
+  flex: 1;
+}
+
+.testimonyInfo {
+  border: solid;
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  flex: 1;
+}
+
+.other {
+  flex: 2;
+}
+
+.other > div {
+  height: 33%;
+}
+
+.one {
+  background-color: #fbfbf8;
+}
+
+.two {
+  background-color: white;
+}
+
+.three {
+  background-color: #fbfbf8;
+}
+
+.four {
+  background-color: white;
+}
