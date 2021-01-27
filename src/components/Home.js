@@ -8,12 +8,14 @@ const Home = () => {
       <Header />
       <div className="home">
         <div className="one">
-          <div>My Career in Web Development Started Here</div>
-          <div>
+          <div className="headerText">
+            My Career in Web Development Started Here
+          </div>
+          <div className="text">
             This community will get you from start to finish on buliding
             yourself for a career in web development.
           </div>
-          <button>View The Curriculum</button>
+          <button className="button">View The Curriculum</button>
         </div>
         <div className="two">
           <div>How it works</div>

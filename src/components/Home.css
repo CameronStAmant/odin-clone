@@ -1,7 +1,7 @@
 .home {
   display: flex;
   flex-direction: column;
-  height: 2000px;
+  height: 3000px;
   text-align: center;
 }
 
@@ -90,17 +90,37 @@
 }
 
 .one {
-  background-color: #fbfbf8;
+  background-color: white;
 }
 
 .two {
-  background-color: white;
-}
-
-.three {
   background-color: #fbfbf8;
 }
 
-.four {
+.three {
   background-color: white;
+}
+
+.four {
+  background-color: #fbfbf8;
+}
+
+.headerText {
+  font-size: xxx-large;
+}
+
+.text {
+  font-size: larger;
+}
+
+.button {
+  font-size: larger;
+  color: #fbfbf8;
+  padding: 15px 50px 15px 50px;
+  border: none;
+  font-weight: bold;
+  background-color: rgb(74, 202, 216);
+  box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.2),
+    -2px -1px 3px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
 }
