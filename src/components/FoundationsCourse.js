@@ -7,6 +7,7 @@ const FoundationsCourse = () => {
     '2. Hop on Discord and introduce yourself',
     '3. Mark off lessons as you complete them',
     '4. Keep working',
+    '5. And working',
   ];
 
   return (

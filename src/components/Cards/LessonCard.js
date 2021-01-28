@@ -2,7 +2,12 @@ import './LessonCard.css';
 
 const LessonCard = (props) => {
   const lessons = props.lesson.map((item) => {
-    return <div>{item}</div>;
+    return (
+      <div className="lesson">
+        <div>{item}</div>
+        <button>Mark</button>
+      </div>
+    );
   });
 
   return (
@@ -13,9 +18,7 @@ const LessonCard = (props) => {
           <div>{props.description}</div>
         </div>
       </div>
-      <div className="listLesson">
-        <div>{lessons}</div>
-      </div>
+      <div className="listLesson">{lessons}</div>
     </div>
   );
 };
