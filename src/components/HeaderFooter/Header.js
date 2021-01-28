@@ -1,14 +1,17 @@
 import './Header.css';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
     <div className="header">
-      <div className="headerLeft">The Odin Project</div>
+      <Link to="/">
+        <div className="headerLeft">The Odin Project</div>
+      </Link>
+
       <div className="headerRight">
-        <div>All Paths</div>
-        <div>Community</div>
-        <div>About</div>
-        <div>FAQ</div>
+        <Link to="/curriculum">
+          <div>Curriculum</div>
+        </Link>
         <div>|</div>
         <div>Sign Up</div>
         <div>Log In</div>
