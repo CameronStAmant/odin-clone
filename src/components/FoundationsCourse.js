@@ -3,11 +3,11 @@ import LessonCard from './Cards/LessonCard';
 
 const FoundationsCourse = () => {
   const lessons = [
-    '1. Get a computer',
-    '2. Hop on Discord and introduce yourself',
-    '3. Mark off lessons as you complete them',
-    '4. Keep working',
-    '5. And working',
+    'Get a computer',
+    'Hop on Discord and introduce yourself',
+    'Mark off lessons as you complete them',
+    'Keep working',
+    'And working',
   ];
 
   return (
@@ -15,11 +15,13 @@ const FoundationsCourse = () => {
       <Header />
       <div className="section">
         <div className="headerText">Foundations course!</div>
-        <LessonCard
-          name="Introduction"
-          description="This is the start of the rest of your career!"
-          lesson={lessons}
-        />
+        <ol>
+          <LessonCard
+            name="Introduction"
+            description="This is the start of the rest of your career!"
+            lesson={lessons}
+          />
+        </ol>
       </div>
     </div>
   );
