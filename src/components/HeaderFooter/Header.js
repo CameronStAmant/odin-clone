@@ -1,5 +1,6 @@
 import './Header.css';
 import { Link } from 'react-router-dom';
+import Auth from '../Cards/Auth';
 
 const Header = () => {
   return (
@@ -14,7 +15,7 @@ const Header = () => {
         </Link>
         <div>|</div>
         <div>Sign Up</div>
-        <div>Log In</div>
+        <Auth />
       </div>
     </div>
   );
