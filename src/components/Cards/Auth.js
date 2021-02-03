@@ -4,6 +4,7 @@ import { auth, fireb } from '../../services/firebase';
 const Auth = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoggedIn, setisLoggedIn] = useState(false);
 
   const handleChange = (event) => {
     switch (event.target.name) {
@@ -36,13 +37,15 @@ const Auth = () => {
     auth.signInWithPopup(provider);
   };
 
-  auth.onAuthStateChanged((firebaseUser) => {
-    if (firebaseUser) {
-      console.log(firebaseUser);
-    } else {
-      console.log('not logged in');
-    }
-  });
+  // auth.onAuthStateChanged((firebaseUser) => {
+  //   if (firebaseUser) {
+  //     setisLoggedIn(true);
+  //     console.log('is logged in');
+  //   } else {
+  //     setisLoggedIn(false);
+  //     console.log('is logged out');
+  //   }
+  // });
 
   const signUpAnonymously = () => {
     auth.signInAnonymously();

@@ -4,9 +4,12 @@ import React, { useState } from 'react';
 
 const LessonCard = (props) => {
   const [loadLessons, setLoadLessons] = useState(true);
+  const [loadAuthlessLessons, setLoadAuthlessLessons] = useState([]);
+
   let foundationsData;
   let foundationsStatus = [];
   let lessons;
+  let authlessLessons;
 
   const updateDatabase = (lesson) => {
     const specificLesson = {};
@@ -23,7 +26,7 @@ const LessonCard = (props) => {
 
   const buttonUpdater = () => {
     lessons = props.lesson.map((item) => {
-      let choice;
+      let choice = [];
       if (foundationsStatus[0].length !== 0) {
         if (foundationsStatus[0][item] === false) {
           choice = <button onClick={() => updateDatabase(item)}>Mark</button>;
@@ -39,8 +42,17 @@ const LessonCard = (props) => {
         </div>
       );
     });
+
+    authlessLessons = props.lesson.map((item) => {
+      return (
+        <div key={item} className="lesson">
+          <li>{item}</li>
+        </div>
+      );
+    });
     if (loadLessons === true) {
       setLoadLessons(lessons);
+      setLoadAuthlessLessons(authlessLessons);
     }
   };
 
@@ -65,7 +77,9 @@ const LessonCard = (props) => {
           <div>{props.description}</div>
         </div>
       </div>
-      <div className="listLesson">{loadLessons}</div>
+      <div className="listLesson">
+        {props.isLoggedIn ? loadLessons : loadAuthlessLessons}
+      </div>
     </div>
   );
 };
