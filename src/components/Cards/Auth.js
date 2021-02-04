@@ -41,14 +41,31 @@ const Auth = () => {
     if (firebaseUser) {
       userId = auth.currentUser.uid;
       db.ref()
-        .child('/users/' + userId + '/Foundations/Introduction')
-        .set({
-          'And working': false,
-          'Get a computer': false,
-          'Hop on Discord and introduce yourself': false,
-          'Keep working': false,
-          'Mark off lessons as you complete them': false,
+        .child('/users/' + userId)
+        .once('value', (snapshot) => {
+          if (snapshot.hasChild('/Foundations/')) {
+            console.log('already exists');
+          } else {
+            db.ref()
+              .child('/users/' + userId + '/Foundations/Introduction')
+              .set({
+                'And working': false,
+                'Get a computer': false,
+                'Hop on Discord and introduce yourself': false,
+                'Keep working': false,
+                'Mark off lessons as you complete them': false,
+              });
+          }
         });
+      // db.ref()
+      //   .child('/users/' + userId + '/Foundations/Introduction')
+      //   .set({
+      //     'And working': false,
+      //     'Get a computer': false,
+      //     'Hop on Discord and introduce yourself': false,
+      //     'Keep working': false,
+      //     'Mark off lessons as you complete them': false,
+      //   });
     } else {
     }
   });

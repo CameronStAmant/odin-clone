@@ -26,6 +26,27 @@ const FoundationsCourse = () => {
     }
   };
 
+  const updater = async (specificLesson) => {
+    db.ref()
+      .child('/users/' + auth.currentUser.uid + '/Foundations')
+      .child('Introduction')
+      .update(specificLesson);
+
+    let a = db.ref().child('/users/notLoggedIn/Foundations');
+    setFoundationsData(a);
+
+    let c = [];
+    await db
+      .ref()
+      .child('/users/' + auth.currentUser.uid + '/Foundations')
+      .once('value', (snapshot) => {
+        snapshot.forEach(function (child) {
+          c.push(child.val());
+        });
+      });
+    setFoundationsStatus(c);
+  };
+
   auth.onAuthStateChanged(async (firebaseUser) => {
     if (firebaseUser) {
       if (foundationsStatus === '') {
@@ -41,20 +62,18 @@ const FoundationsCourse = () => {
         setFoundationsStatus(c);
       }
 
-      if (isLoggedIn !== true) {
-        if (userId === '') {
-          setUserId(auth.currentUser.uid);
-        }
-        if (foundationsData === '') {
-          let a = db
-            .ref()
-            .child('/users/' + auth.currentUser.uid + '/Foundations');
-          setFoundationsData(a);
-        }
+      if (userId === '') {
+        setUserId(auth.currentUser.uid);
+      }
+      if (foundationsData === '') {
+        let a = db
+          .ref()
+          .child('/users/' + auth.currentUser.uid + '/Foundations');
+        setFoundationsData(a);
+      }
 
-        if (isLoggedIn === '') {
-          setisLoggedIn(true);
-        }
+      if (isLoggedIn === '') {
+        setisLoggedIn(true);
       }
     } else {
       if (isLoggedIn !== false) {
@@ -103,6 +122,7 @@ const FoundationsCourse = () => {
             userId={userId}
             foundationsData={foundationsData}
             foundationsStatus={foundationsStatus}
+            updater={(lesson) => updater(lesson)}
           />
         </ol>
       </div>

@@ -6,23 +6,23 @@ const LessonCard = (props) => {
   const [loadLessons, setLoadLessons] = useState(true);
   const [loadAuthlessLessons, setLoadAuthlessLessons] = useState([]);
 
-  // let foundationsData;
-  // let foundationsStatus = [];
   let lessons = '';
   let authlessLessons;
   let choice;
+  console.log(`in the top, here is foundationsData:${props.foundationsData}`);
 
   const updateDatabase = (lesson) => {
     const specificLesson = {};
     if (props.foundationsStatus[0][lesson] === false) {
+      console.log('in');
       specificLesson[lesson] = true;
       props.changePercentage('+');
     } else {
       specificLesson[lesson] = false;
       props.changePercentage('-');
     }
-    props.foundationsData.child('Introduction').update(specificLesson);
-    // pullDatabase();
+
+    props.updater(specificLesson);
   };
 
   const buttonUpdater = () => {
