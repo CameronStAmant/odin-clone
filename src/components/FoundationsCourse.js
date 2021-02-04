@@ -123,6 +123,9 @@ const FoundationsCourse = () => {
             foundationsData={foundationsData}
             foundationsStatus={foundationsStatus}
             updater={(lesson) => updater(lesson)}
+            setNumber={(current) => {
+              setNumber(current);
+            }}
           />
         </ol>
       </div>

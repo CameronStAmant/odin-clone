@@ -10,6 +10,7 @@ const LessonCard = (props) => {
   let authlessLessons;
   let choice;
   console.log(`in the top, here is foundationsData:${props.foundationsData}`);
+  let counter = 0;
 
   const updateDatabase = (lesson) => {
     const specificLesson = {};
@@ -32,10 +33,12 @@ const LessonCard = (props) => {
         props.foundationsStatus[0].length !== 0
       ) {
         console.log('FINALLY');
+
         if (props.foundationsStatus[0][item] === false) {
           choice = <button onClick={() => updateDatabase(item)}>Mark</button>;
         } else {
           choice = <button onClick={() => updateDatabase(item)}>Unmark</button>;
+          counter += 1;
         }
       } else {
         choice = 'no';
@@ -58,6 +61,7 @@ const LessonCard = (props) => {
       );
     });
     if (loadLessons === true && choice !== 'no') {
+      props.setNumber(counter);
       setLoadLessons(lessons);
       setLoadAuthlessLessons(authlessLessons);
     }
