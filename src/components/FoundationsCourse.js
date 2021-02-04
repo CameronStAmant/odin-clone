@@ -1,11 +1,14 @@
 import Header from './HeaderFooter/Header';
 import LessonCard from './Cards/LessonCard';
-import React, { useState, useEffect } from 'react';
-import { auth } from '../services/firebase';
+import React, { useState } from 'react';
+import { auth, db } from '../services/firebase';
 
 const FoundationsCourse = () => {
   const [number, setNumber] = useState(0);
-  const [isLoggedIn, setisLoggedIn] = useState(false);
+  const [isLoggedIn, setisLoggedIn] = useState('');
+  const [userId, setUserId] = useState('');
+  const [foundationsData, setFoundationsData] = useState('');
+  const [foundationsStatus, setFoundationsStatus] = useState('');
 
   const lessons = [
     'Get a computer',
@@ -23,18 +26,64 @@ const FoundationsCourse = () => {
     }
   };
 
-  useEffect(() => {
-    auth.onAuthStateChanged((firebaseUser) => {
-      if (firebaseUser) {
-        if (isLoggedIn !== true) {
+  auth.onAuthStateChanged(async (firebaseUser) => {
+    if (firebaseUser) {
+      if (foundationsStatus === '') {
+        let c = [];
+        await db
+          .ref()
+          .child('/users/' + auth.currentUser.uid + '/Foundations')
+          .once('value', (snapshot) => {
+            snapshot.forEach(function (child) {
+              c.push(child.val());
+            });
+          });
+        setFoundationsStatus(c);
+      }
+
+      if (isLoggedIn !== true) {
+        if (userId === '') {
+          setUserId(auth.currentUser.uid);
+        }
+        if (foundationsData === '') {
+          let a = db
+            .ref()
+            .child('/users/' + auth.currentUser.uid + '/Foundations');
+          setFoundationsData(a);
+        }
+
+        if (isLoggedIn === '') {
           setisLoggedIn(true);
         }
-      } else {
-        if (isLoggedIn !== false) {
+      }
+    } else {
+      if (isLoggedIn !== false) {
+        if (userId === '') {
+          setUserId(false);
+        }
+        if (foundationsData === '') {
+          let a = db.ref().child('/users/notLoggedIn/Foundations');
+          setFoundationsData(a);
+        }
+
+        if (foundationsStatus === '') {
+          let c = [];
+          await db
+            .ref()
+            .child('/users/notLoggedIn/Foundations')
+            .once('value', (snapshot) => {
+              snapshot.forEach(function (child) {
+                c.push(child.val());
+              });
+            });
+          setFoundationsStatus(c);
+        }
+
+        if (isLoggedIn === '') {
           setisLoggedIn(false);
         }
       }
-    });
+    }
   });
 
   return (
@@ -48,9 +97,12 @@ const FoundationsCourse = () => {
           <LessonCard
             name="Introduction"
             description="This is the start of the rest of your career!"
-            lesson={lessons}
+            lessons={lessons}
             changePercentage={(sign) => plusMinus(sign)}
             isLoggedIn={isLoggedIn}
+            userId={userId}
+            foundationsData={foundationsData}
+            foundationsStatus={foundationsStatus}
           />
         </ol>
       </div>

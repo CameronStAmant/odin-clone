@@ -1,38 +1,45 @@
 import './LessonCard.css';
-import { db } from '../../services/firebase';
+// import { db } from '../../services/firebase';
 import React, { useState } from 'react';
 
 const LessonCard = (props) => {
   const [loadLessons, setLoadLessons] = useState(true);
   const [loadAuthlessLessons, setLoadAuthlessLessons] = useState([]);
 
-  let foundationsData;
-  let foundationsStatus = [];
-  let lessons;
+  // let foundationsData;
+  // let foundationsStatus = [];
+  let lessons = '';
   let authlessLessons;
+  let choice;
 
   const updateDatabase = (lesson) => {
     const specificLesson = {};
-    if (foundationsStatus[0][lesson] === false) {
+    if (props.foundationsStatus[0][lesson] === false) {
       specificLesson[lesson] = true;
       props.changePercentage('+');
     } else {
       specificLesson[lesson] = false;
       props.changePercentage('-');
     }
-    foundationsData.child('Introduction').update(specificLesson);
-    pullDatabase();
+    props.foundationsData.child('Introduction').update(specificLesson);
+    // pullDatabase();
   };
 
   const buttonUpdater = () => {
-    lessons = props.lesson.map((item) => {
-      let choice = [];
-      if (foundationsStatus[0].length !== 0) {
-        if (foundationsStatus[0][item] === false) {
+    lessons = props.lessons.map((item) => {
+      if (
+        props.foundationsStatus !== '' &&
+        props.foundationsStatus[0].length !== 0
+      ) {
+        console.log('FINALLY');
+        if (props.foundationsStatus[0][item] === false) {
           choice = <button onClick={() => updateDatabase(item)}>Mark</button>;
         } else {
           choice = <button onClick={() => updateDatabase(item)}>Unmark</button>;
         }
+      } else {
+        choice = 'no';
+        console.log('NO');
       }
 
       return (
@@ -43,31 +50,20 @@ const LessonCard = (props) => {
       );
     });
 
-    authlessLessons = props.lesson.map((item) => {
+    authlessLessons = props.lessons.map((item) => {
       return (
         <div key={item} className="lesson">
           <li>{item}</li>
         </div>
       );
     });
-    if (loadLessons === true) {
+    if (loadLessons === true && choice !== 'no') {
       setLoadLessons(lessons);
       setLoadAuthlessLessons(authlessLessons);
     }
   };
 
-  const pullDatabase = async () => {
-    foundationsStatus = [];
-    foundationsData = db.ref().child('Foundations');
-    await foundationsData.once('value', async (snapshot) => {
-      snapshot.forEach(function (child) {
-        foundationsStatus.push(child.val());
-      });
-    });
-    buttonUpdater();
-  };
-
-  pullDatabase();
+  buttonUpdater();
 
   return (
     <div className="lessonCard">

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { auth, fireb } from '../../services/firebase';
+import { auth, fireb, db } from '../../services/firebase';
 
 const Auth = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoggedIn, setisLoggedIn] = useState(false);
+  let userId;
 
   const handleChange = (event) => {
     switch (event.target.name) {
@@ -37,15 +37,21 @@ const Auth = () => {
     auth.signInWithPopup(provider);
   };
 
-  // auth.onAuthStateChanged((firebaseUser) => {
-  //   if (firebaseUser) {
-  //     setisLoggedIn(true);
-  //     console.log('is logged in');
-  //   } else {
-  //     setisLoggedIn(false);
-  //     console.log('is logged out');
-  //   }
-  // });
+  auth.onAuthStateChanged((firebaseUser) => {
+    if (firebaseUser) {
+      userId = auth.currentUser.uid;
+      db.ref()
+        .child('/users/' + userId + '/Foundations/Introduction')
+        .set({
+          'And working': false,
+          'Get a computer': false,
+          'Hop on Discord and introduce yourself': false,
+          'Keep working': false,
+          'Mark off lessons as you complete them': false,
+        });
+    } else {
+    }
+  });
 
   const signUpAnonymously = () => {
     auth.signInAnonymously();
