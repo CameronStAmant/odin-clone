@@ -27,7 +27,7 @@ const LessonCard = (props) => {
     lessons = props.lessons.map((item) => {
       if (
         props.foundationsStatus !== '' &&
-        props.foundationsStatus[0].length !== 0
+        props.foundationsStatus.length !== 0
       ) {
         if (props.foundationsStatus[0][item] === false) {
           choice = <button onClick={() => updateDatabase(item)}>Mark</button>;

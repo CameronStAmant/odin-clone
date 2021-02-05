@@ -50,17 +50,39 @@ const FoundationsCourse = () => {
   auth.onAuthStateChanged(async (firebaseUser) => {
     if (firebaseUser) {
       if (foundationsStatus === '') {
+        let cMap = [];
         let c = [];
         await db
           .ref()
           .child('/users/' + auth.currentUser.uid + '/Foundations')
-          .once('value', (snapshot) => {
-            snapshot.forEach(function (child) {
-              c.push(child.val());
+          .once('value', async (snapshot) => {
+            snapshot.forEach((child) => {
+              let stuff = child.val();
+              stuff.value = child.val();
+              c.push(stuff.value);
+              console.log(stuff.value);
             });
+            await Promise.all(c);
+
+            for (let [key, value] of Object.entries(c)) {
+              // console.log(value);
+              // console.log(key);
+              cMap.push(value);
+            }
           });
+        console.log(cMap);
+
+        // await db
+        //   .ref()
+        //   .child('/users/' + auth.currentUser.uid + '/Foundations')
+        //   .once('value', (snapshot) => {
+        //     snapshot.forEach(function (child) {
+        //       c.push(child.val());
+        //     });
+        //   });
         setFoundationsStatus(c);
-        let cArray = Object.values(c[0]);
+        console.log('here');
+        let cArray = Object.values(c);
         let currentNum = 0;
         cArray.map((item) => {
           if (item === true) {
