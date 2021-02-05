@@ -9,21 +9,18 @@ const LessonCard = (props) => {
   let lessons = '';
   let authlessLessons;
   let choice;
-  console.log(`in the top, here is foundationsData:${props.foundationsData}`);
-  let counter = 0;
 
-  const updateDatabase = (lesson) => {
+  const updateDatabase = async (lesson) => {
     const specificLesson = {};
     if (props.foundationsStatus[0][lesson] === false) {
-      console.log('in');
       specificLesson[lesson] = true;
       props.changePercentage('+');
     } else {
       specificLesson[lesson] = false;
       props.changePercentage('-');
     }
-
-    props.updater(specificLesson);
+    await props.updater(specificLesson);
+    setLoadLessons(true);
   };
 
   const buttonUpdater = () => {
@@ -32,17 +29,13 @@ const LessonCard = (props) => {
         props.foundationsStatus !== '' &&
         props.foundationsStatus[0].length !== 0
       ) {
-        console.log('FINALLY');
-
         if (props.foundationsStatus[0][item] === false) {
           choice = <button onClick={() => updateDatabase(item)}>Mark</button>;
         } else {
           choice = <button onClick={() => updateDatabase(item)}>Unmark</button>;
-          counter += 1;
         }
       } else {
         choice = 'no';
-        console.log('NO');
       }
 
       return (
@@ -61,7 +54,6 @@ const LessonCard = (props) => {
       );
     });
     if (loadLessons === true && choice !== 'no') {
-      props.setNumber(counter);
       setLoadLessons(lessons);
       setLoadAuthlessLessons(authlessLessons);
     }

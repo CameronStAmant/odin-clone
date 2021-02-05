@@ -15,7 +15,6 @@ const Auth = () => {
         setPassword(event.target.value);
         break;
       default:
-        console.log('no name error');
         break;
     }
   };
@@ -44,7 +43,6 @@ const Auth = () => {
         .child('/users/' + userId)
         .once('value', (snapshot) => {
           if (snapshot.hasChild('/Foundations/')) {
-            console.log('already exists');
           } else {
             db.ref()
               .child('/users/' + userId + '/Foundations/Introduction')

@@ -60,6 +60,15 @@ const FoundationsCourse = () => {
             });
           });
         setFoundationsStatus(c);
+        let cArray = Object.values(c[0]);
+        let currentNum = 0;
+        cArray.map((item) => {
+          if (item === true) {
+            currentNum += 1;
+          }
+          return null;
+        });
+        setNumber(currentNum);
       }
 
       if (userId === '') {
@@ -123,9 +132,6 @@ const FoundationsCourse = () => {
             foundationsData={foundationsData}
             foundationsStatus={foundationsStatus}
             updater={(lesson) => updater(lesson)}
-            setNumber={(current) => {
-              setNumber(current);
-            }}
           />
         </ol>
       </div>
