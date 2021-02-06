@@ -12,7 +12,7 @@ const LessonCard = (props) => {
 
   const updateDatabase = async (lesson) => {
     const specificLesson = {};
-    if (props.foundationsStatus[0][lesson] === false) {
+    if (props.foundationsProgress[0][lesson] === false) {
       specificLesson[lesson] = true;
       props.changePercentage('+');
     } else {
@@ -26,10 +26,10 @@ const LessonCard = (props) => {
   const buttonUpdater = () => {
     lessons = props.lessons.map((item) => {
       if (
-        props.foundationsStatus !== '' &&
-        props.foundationsStatus.length !== 0
+        props.foundationsProgress !== '' &&
+        props.foundationsProgress.length !== 0
       ) {
-        if (props.foundationsStatus[0][item] === false) {
+        if (props.foundationsProgress[0][item] === false) {
           choice = <button onClick={() => updateDatabase(item)}>Mark</button>;
         } else {
           choice = <button onClick={() => updateDatabase(item)}>Unmark</button>;

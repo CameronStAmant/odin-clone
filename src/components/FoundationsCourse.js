@@ -7,8 +7,7 @@ const FoundationsCourse = () => {
   const [number, setNumber] = useState(0);
   const [isLoggedIn, setisLoggedIn] = useState('');
   const [userId, setUserId] = useState('');
-  const [foundationsData, setFoundationsData] = useState('');
-  const [foundationsStatus, setFoundationsStatus] = useState('');
+  const [foundationsProgress, setFoundationsProgress] = useState('');
 
   const lessons = [
     'Get a computer',
@@ -32,9 +31,6 @@ const FoundationsCourse = () => {
       .child('Introduction')
       .update(specificLesson);
 
-    let a = db.ref().child('/users/notLoggedIn/Foundations');
-    setFoundationsData(a);
-
     let c = [];
     await db
       .ref()
@@ -44,12 +40,12 @@ const FoundationsCourse = () => {
           c.push(child.val());
         });
       });
-    setFoundationsStatus(c);
+    setFoundationsProgress(c);
   };
 
   auth.onAuthStateChanged(async (firebaseUser) => {
     if (firebaseUser) {
-      if (foundationsStatus === '') {
+      if (foundationsProgress === '') {
         let cMap = [];
         let c = [];
         await db
@@ -60,33 +56,19 @@ const FoundationsCourse = () => {
               let stuff = child.val();
               stuff.value = child.val();
               c.push(stuff.value);
-              console.log(stuff.value);
             });
             await Promise.all(c);
 
             for (let [key, value] of Object.entries(c)) {
-              // console.log(value);
-              // console.log(key);
               cMap.push(value);
             }
           });
-        console.log(cMap);
-
-        // await db
-        //   .ref()
-        //   .child('/users/' + auth.currentUser.uid + '/Foundations')
-        //   .once('value', (snapshot) => {
-        //     snapshot.forEach(function (child) {
-        //       c.push(child.val());
-        //     });
-        //   });
-        setFoundationsStatus(c);
-        console.log('here');
-        let cArray = Object.values(c);
+        setFoundationsProgress(c);
         let currentNum = 0;
-        cArray.map((item) => {
+        cMap.map((item) => {
           if (item === true) {
             currentNum += 1;
+          } else {
           }
           return null;
         });
@@ -95,12 +77,6 @@ const FoundationsCourse = () => {
 
       if (userId === '') {
         setUserId(auth.currentUser.uid);
-      }
-      if (foundationsData === '') {
-        let a = db
-          .ref()
-          .child('/users/' + auth.currentUser.uid + '/Foundations');
-        setFoundationsData(a);
       }
 
       if (isLoggedIn === '') {
@@ -111,12 +87,8 @@ const FoundationsCourse = () => {
         if (userId === '') {
           setUserId(false);
         }
-        if (foundationsData === '') {
-          let a = db.ref().child('/users/notLoggedIn/Foundations');
-          setFoundationsData(a);
-        }
 
-        if (foundationsStatus === '') {
+        if (foundationsProgress === '') {
           let c = [];
           await db
             .ref()
@@ -126,7 +98,7 @@ const FoundationsCourse = () => {
                 c.push(child.val());
               });
             });
-          setFoundationsStatus(c);
+          setFoundationsProgress(c);
         }
 
         if (isLoggedIn === '') {
@@ -151,8 +123,7 @@ const FoundationsCourse = () => {
             changePercentage={(sign) => plusMinus(sign)}
             isLoggedIn={isLoggedIn}
             userId={userId}
-            foundationsData={foundationsData}
-            foundationsStatus={foundationsStatus}
+            foundationsProgress={foundationsProgress}
             updater={(lesson) => updater(lesson)}
           />
         </ol>
