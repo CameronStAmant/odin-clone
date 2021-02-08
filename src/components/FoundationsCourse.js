@@ -7,8 +7,7 @@ import usePrevious from './usePrevious';
 
 const FoundationsCourse = () => {
   const [number, setNumber] = useState(0);
-  const [isLoggedIn, setisLoggedIn] = useState('');
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState(false);
   const [foundationsProgress, setFoundationsProgress] = useState('');
 
   const prevFoundationsProgress = usePrevious(foundationsProgress);
@@ -32,14 +31,14 @@ const FoundationsCourse = () => {
 
   const updater = async (specificLesson) => {
     db.ref()
-      .child('/users/' + auth.currentUser.uid + '/Foundations')
+      .child(`/users/${auth.currentUser.uid}/Foundations`)
       .child('Introduction')
       .update(specificLesson);
 
     let c = [];
     await db
       .ref()
-      .child('/users/' + auth.currentUser.uid + '/Foundations')
+      .child(`/users/${auth.currentUser.uid}/Foundations`)
       .once('value', (snapshot) => {
         snapshot.forEach(function (child) {
           c.push(child.val());
@@ -55,7 +54,7 @@ const FoundationsCourse = () => {
         let c = [];
         await db
           .ref()
-          .child('/users/' + userId + '/Foundations')
+          .child(`/users/${userId}/Foundations`)
           .once('value', async (snapshot) => {
             snapshot.forEach((child) => {
               let stuff = child.val();
@@ -63,17 +62,13 @@ const FoundationsCourse = () => {
               c.push(stuff.value);
               for (let [key, value] of Object.entries(c[0])) {
                 cMap.push(value);
-                console.log(value);
-                console.log(1);
               }
             });
             await Promise.all(c);
           });
         setFoundationsProgress(c);
         currentNum = 0;
-        console.log(`~~~~~~~~~cMap:${cMap}`);
         cMap.map((item) => {
-          console.log(`item:${item}`);
           if (item === true) {
             currentNum += 1;
           } else {
@@ -82,7 +77,6 @@ const FoundationsCourse = () => {
         });
         setNumber(currentNum);
       };
-      console.log('in!~~~~');
       reRunner();
     }
   }, [foundationsProgress, prevFoundationsProgress]);
@@ -90,65 +84,25 @@ const FoundationsCourse = () => {
   useEffect(() => {
     auth.onAuthStateChanged(async (firebaseUser) => {
       if (firebaseUser) {
-        if (foundationsProgress === '') {
-          // let cMap = [];
-          // let c = [];
-          // await db
-          //   .ref()
-          //   .child('/users/' + auth.currentUser.uid + '/Foundations')
-          //   .once('value', async (snapshot) => {
-          //     snapshot.forEach((child) => {
-          //       let stuff = child.val();
-          //       stuff.value = child.val();
-          //       c.push(stuff.value);
-          //     });
-          //     await Promise.all(c);
-          //     for (let [key, value] of Object.entries(c)) {
-          //       cMap.push(value);
-          //     }
-          //   });
-          // setFoundationsProgress(c);
-          // currentNum = 0;
-          // console.log(`~~~~~~~~~cMap:${cMap}`);
-          // cMap.map((item) => {
-          //   if (item === true) {
-          //     currentNum += 1;
-          //   } else {
-          //   }
-          //   return null;
-          // });
-          // setNumber(currentNum);
-        }
-
-        if (userId === '') {
+        if (userId === false) {
           setUserId(auth.currentUser.uid);
         }
-
-        if (isLoggedIn === '') {
-          setisLoggedIn(true);
-        }
       } else {
-        if (isLoggedIn !== false) {
-          if (userId === '') {
-            setUserId(false);
-          }
+        if (userId !== false) {
+          setUserId(false);
+        }
 
-          if (foundationsProgress === '') {
-            let c = [];
-            await db
-              .ref()
-              .child('/users/notLoggedIn/Foundations')
-              .once('value', (snapshot) => {
-                snapshot.forEach(function (child) {
-                  c.push(child.val());
-                });
+        if (foundationsProgress === '') {
+          let c = [];
+          await db
+            .ref()
+            .child('/users/notLoggedIn/Foundations')
+            .once('value', (snapshot) => {
+              snapshot.forEach(function (child) {
+                c.push(child.val());
               });
-            setFoundationsProgress(c);
-          }
-
-          if (isLoggedIn === '') {
-            setisLoggedIn(false);
-          }
+            });
+          setFoundationsProgress(c);
         }
       }
     });
@@ -160,14 +114,13 @@ const FoundationsCourse = () => {
       <div className="section">
         <div className="headerText">Foundations course!</div>
 
-        {isLoggedIn && <div>{(number / lessons.length) * 100}%</div>}
+        {userId && <div>{(number / lessons.length) * 100}%</div>}
         <ol>
           <LessonCard
             name="Introduction"
             description="This is the start of the rest of your career!"
             lessons={lessons}
             changePercentage={(sign) => plusMinus(sign)}
-            isLoggedIn={isLoggedIn}
             userId={userId}
             foundationsProgress={foundationsProgress}
             updater={(lesson) => updater(lesson)}

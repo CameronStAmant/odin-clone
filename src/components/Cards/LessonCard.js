@@ -70,7 +70,7 @@ const LessonCard = (props) => {
         </div>
       </div>
       <div className="listLesson">
-        {props.isLoggedIn ? loadLessons : loadAuthlessLessons}
+        {props.userId ? loadLessons : loadAuthlessLessons}
       </div>
     </div>
   );
