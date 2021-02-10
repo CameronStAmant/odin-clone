@@ -55,16 +55,6 @@ const Auth = () => {
               });
           }
         });
-      // db.ref()
-      //   .child('/users/' + userId + '/Foundations/Introduction')
-      //   .set({
-      //     'And working': false,
-      //     'Get a computer': false,
-      //     'Hop on Discord and introduce yourself': false,
-      //     'Keep working': false,
-      //     'Mark off lessons as you complete them': false,
-      //   });
-    } else {
     }
   });
 

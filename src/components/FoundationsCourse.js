@@ -7,12 +7,13 @@ import usePrevious from './usePrevious';
 
 const FoundationsCourse = () => {
   const [number, setNumber] = useState(0);
-  const [userId, setUserId] = useState(false);
+  const [userId, setUserId] = useState(null);
   const [foundationsProgress, setFoundationsProgress] = useState('');
+  const [reload, setReload] = useState(false);
 
-  const prevFoundationsProgress = usePrevious(foundationsProgress);
+  const prevUserId = usePrevious(userId);
 
-  let currentNum = 3;
+  let currentNum = 0;
   const lessons = [
     'Get a computer',
     'Hop on Discord and introduce yourself',
@@ -48,64 +49,95 @@ const FoundationsCourse = () => {
   };
 
   useEffect(() => {
-    if (!_.isEqual(prevFoundationsProgress, foundationsProgress)) {
-      const reRunner = async () => {
-        let cMap = [];
+    auth.onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser) {
+        if (userId === null) {
+          setUserId(auth.currentUser.uid);
+        }
+      } else {
+        if (userId !== null) {
+          setUserId(null);
+          setReload(false);
+        }
+      }
+    });
+
+    if (
+      foundationsProgress === '' &&
+      userId === null &&
+      prevUserId === undefined
+    ) {
+      const initialRun = async () => {
         let c = [];
         await db
           .ref()
-          .child(`/users/${userId}/Foundations`)
+          .child(`/users/notLoggedIn/Foundations`)
           .once('value', async (snapshot) => {
             snapshot.forEach((child) => {
-              let stuff = child.val();
-              stuff.value = child.val();
-              c.push(stuff.value);
-              for (let [key, value] of Object.entries(c[0])) {
-                cMap.push(value);
-              }
+              let getValue = child.val();
+              getValue.value = child.val();
+              c.push(getValue.value);
             });
             await Promise.all(c);
           });
         setFoundationsProgress(c);
-        currentNum = 0;
-        cMap.map((item) => {
-          if (item === true) {
-            currentNum += 1;
-          } else {
-          }
-          return null;
-        });
-        setNumber(currentNum);
+      };
+      initialRun();
+    }
+
+    if (
+      (!_.isEqual(prevUserId, userId) &&
+        userId !== null &&
+        foundationsProgress !== '') ||
+      (prevUserId === null && userId !== null)
+    ) {
+      const reRunner = async () => {
+        let c = [];
+
+        await db
+          .ref()
+          .child(`/users/${userId}/Foundations`)
+          .once('value', async (snapshot) => {
+            if (snapshot.hasChild('/Introduction/')) {
+              snapshot.forEach((child) => {
+                let getValue = child.val();
+                getValue.value = child.val();
+                c.push(getValue.value);
+              });
+            } else {
+              setTimeout(() => {
+                reRunner();
+              }, 100);
+            }
+            await Promise.all(c);
+          });
+
+        setFoundationsProgress(c);
+
+        if (reload !== true) {
+          setReload(true);
+        }
       };
       reRunner();
     }
-  }, [foundationsProgress, prevFoundationsProgress]);
 
-  useEffect(() => {
-    auth.onAuthStateChanged(async (firebaseUser) => {
-      if (firebaseUser) {
-        if (userId === false) {
-          setUserId(auth.currentUser.uid);
-        }
-      } else {
-        if (userId !== false) {
-          setUserId(false);
-        }
-
-        if (foundationsProgress === '') {
-          let c = [];
-          await db
-            .ref()
-            .child('/users/notLoggedIn/Foundations')
-            .once('value', (snapshot) => {
-              snapshot.forEach(function (child) {
-                c.push(child.val());
-              });
-            });
-          setFoundationsProgress(c);
-        }
+    let cMap = [];
+    if (foundationsProgress[0] !== undefined) {
+      for (let [key, value] of Object.entries(foundationsProgress[0])) {
+        cMap.push(value);
       }
-    });
+      currentNum = 0;
+      cMap.map((item) => {
+        if (item === true) {
+          currentNum += 1;
+        } else {
+        }
+        return null;
+      });
+      if (currentNum !== number) {
+        setNumber(currentNum);
+      }
+    }
   });
 
   return (
@@ -124,6 +156,7 @@ const FoundationsCourse = () => {
             userId={userId}
             foundationsProgress={foundationsProgress}
             updater={(lesson) => updater(lesson)}
+            reload={reload}
           />
         </ol>
       </div>

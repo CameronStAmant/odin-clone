@@ -1,10 +1,12 @@
 import './LessonCard.css';
-// import { db } from '../../services/firebase';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import usePrevious from '../usePrevious';
 
 const LessonCard = (props) => {
   const [loadLessons, setLoadLessons] = useState(true);
   const [loadAuthlessLessons, setLoadAuthlessLessons] = useState([]);
+
+  const prevUserId = usePrevious(props.userId);
 
   let lessons = '';
   let authlessLessons;
@@ -53,13 +55,21 @@ const LessonCard = (props) => {
         </div>
       );
     });
+
     if (loadLessons === true && choice !== 'no') {
       setLoadLessons(lessons);
       setLoadAuthlessLessons(authlessLessons);
+    } else {
     }
   };
 
   buttonUpdater();
+
+  useEffect(() => {
+    if (prevUserId !== props.userId || props.reload === true) {
+      setLoadLessons(true);
+    }
+  }, [prevUserId, props.userId, props.reload]);
 
   return (
     <div className="lessonCard">
