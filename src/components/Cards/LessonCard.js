@@ -40,7 +40,6 @@ const LessonCard = (props) => {
         props.foundationsProgress !== '' &&
         props.foundationsProgress.length !== 0
       ) {
-        // if (props.foundationsProgress[0][item] === false) {
         if (item === false) {
           choice = (
             <button
@@ -97,7 +96,7 @@ const LessonCard = (props) => {
     if (prevUserId !== props.userId || props.reload === true) {
       setLoadLessons(true);
     }
-  }, [prevUserId, props.userId, props.reload]);
+  }, [prevUserId, props.userId, props.reload, props.prevFoundationsProgress]);
 
   return (
     <div className="lessonCard">

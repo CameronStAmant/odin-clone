@@ -13,10 +13,9 @@ const FoundationsCourse = () => {
   const [sectionTitles, setSectionTitles] = useState([[], []]);
 
   const prevUserId = usePrevious(userId);
+  const prevFoundationsProgress = usePrevious(foundationsProgress);
 
   let currentNum = 0;
-
-  let lessons = [];
 
   const plusMinus = (sign) => {
     if (sign === '+') {
@@ -29,20 +28,22 @@ const FoundationsCourse = () => {
   const updater = async (lesson, section) => {
     await db
       .ref()
-      .child(`/users/${auth.currentUser.uid}/Courses/Foundations`)
+      .child(`/users/${auth.currentUser.uid}/Courses/Foundations/`)
       .child(section)
       .update(lesson);
 
-    let c = [];
     await db
       .ref()
-      .child(`/users/${auth.currentUser.uid}/Courses/Foundations`)
+      .child(`/users/${auth.currentUser.uid}/Courses/Foundations/`)
       .once('value', (snapshot) => {
-        snapshot.forEach(function (child) {
-          c.push(child.val());
-        });
+        let sections = snapshot.val();
+        let arrOfTitles = [];
+        for (const title of Object.entries(sections)) {
+          arrOfTitles.push(title);
+        }
+        setSectionTitles(arrOfTitles);
+        setFoundationsProgress(sections);
       });
-    setFoundationsProgress(c);
   };
 
   useEffect(() => {
@@ -60,41 +61,28 @@ const FoundationsCourse = () => {
     });
 
     if (
-      foundationsProgress === '' &&
-      userId === null &&
-      prevUserId === undefined
+      (foundationsProgress === '' &&
+        userId === null &&
+        prevUserId === undefined) ||
+      reload === false
     ) {
       const initialRun = async () => {
         await db
           .ref()
-          .child(`/users/notLoggedIn/Courses/Foundations`)
+          .child(`/users/notLoggedIn/Courses/Foundations/`)
           .once('value', (snapshot) => {
             let sections = snapshot.val();
             let arrOfTitles = [];
             for (const title of Object.entries(sections)) {
               arrOfTitles.push(title);
             }
-            console.log(arrOfTitles[1][0]);
             setSectionTitles(arrOfTitles);
             setFoundationsProgress(sections);
           });
       };
       initialRun();
+      setReload(true);
     }
-
-    // if (auth.currentUser !== null) {
-    //   const getLessons = async () => {
-    //     await db
-    //       .ref()
-    //       .child(`/users/${auth.currentUser.uid}/Foundations`)
-    //       .once('value', (snapshot) => {
-    //         let sections = snapshot.val();
-    //         console.log(sections);
-    //         setFoundationsProgress(sections);
-    //       });
-    //   };
-    //   getLessons();
-    // }
 
     if (
       (!_.isEqual(prevUserId, userId) &&
@@ -103,8 +91,6 @@ const FoundationsCourse = () => {
       (prevUserId === null && userId !== null)
     ) {
       const reRunner = async () => {
-        // let c = [];
-
         await db
           .ref()
           .child(`/users/${userId}/Courses/`)
@@ -121,10 +107,7 @@ const FoundationsCourse = () => {
                 reRunner();
               }, 200);
             }
-            // await Promise.all(c);
           });
-
-        // setFoundationsProgress(c);
 
         if (reload !== true) {
           setReload(true);
@@ -132,33 +115,35 @@ const FoundationsCourse = () => {
       };
       reRunner();
     }
-
-    // let cMap = [];
-    // if (foundationsProgress[0] !== undefined) {
-    //   for (let [key, value] of Object.entries(foundationsProgress[0])) {
-    //     cMap.push(value);
-    //   }
-    //   currentNum = 0;
-    //   cMap.map((item) => {
-    //     if (item === true) {
-    //       currentNum += 1;
-    //     } else {
-    //     }
-    //     return null;
-    //   });
-    //   if (currentNum !== number) {
-    //     setNumber(currentNum);
-    //   }
-    // }
+    if (foundationsProgress !== '' && sectionTitles.length !== undefined) {
+      let arrOfLessonValues = [];
+      for (const value in foundationsProgress) {
+        for (const [key, values] of Object.entries(
+          foundationsProgress[value]
+        )) {
+          arrOfLessonValues.push(values);
+        }
+      }
+      currentNum = 0;
+      arrOfLessonValues.map((item) => {
+        if (item === true) {
+          currentNum += 1;
+        } else {
+        }
+        return null;
+      });
+      if (currentNum / arrOfLessonValues.length !== number) {
+        setNumber(currentNum / arrOfLessonValues.length);
+      }
+    }
   });
-
   return (
     <div>
       <Header />
       <div className="section">
         <div className="headerText">Foundations course!</div>
 
-        {/* {userId && <div>{(number / lessons.length) * 100}%</div>} */}
+        {userId && <div>{number * 100}%</div>}
         <ol>
           <LessonCard
             name="Introduction"
@@ -169,6 +154,7 @@ const FoundationsCourse = () => {
             sectionTitles={sectionTitles[0][0]}
             updater={(lesson, section) => updater(lesson, section)}
             reload={reload}
+            prevFoundationsProgress={prevFoundationsProgress}
           />
 
           <LessonCard
@@ -180,6 +166,7 @@ const FoundationsCourse = () => {
             sectionTitles={sectionTitles[1][0]}
             updater={(lesson, section) => updater(lesson, section)}
             reload={reload}
+            prevFoundationsProgress={prevFoundationsProgress}
           />
         </ol>
       </div>
