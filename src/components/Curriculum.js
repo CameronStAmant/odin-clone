@@ -14,6 +14,12 @@ const Curriculum = () => {
           path="/curriculum/foundations"
           tag="path"
         />
+        <PathCard
+          name="JavaScript"
+          description="Time to get to the good stuff!"
+          path="/curriculum/javascript"
+          tag="path"
+        />
       </div>
     </div>
   );
