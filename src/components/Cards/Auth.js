@@ -37,22 +37,28 @@ const Auth = () => {
   };
 
   auth.onAuthStateChanged((firebaseUser) => {
+    let template;
     if (firebaseUser) {
       userId = auth.currentUser.uid;
       db.ref()
-        .child('/users/' + userId)
+        .child(`/users/${userId}`)
         .once('value', (snapshot) => {
-          if (snapshot.hasChild('/Foundations/')) {
+          if (snapshot.hasChild('/Courses/')) {
           } else {
-            db.ref()
-              .child('/users/' + userId + '/Foundations/Introduction')
-              .set({
-                'And working': false,
-                'Get a computer': false,
-                'Hop on Discord and introduce yourself': false,
-                'Keep working': false,
-                'Mark off lessons as you complete them': false,
-              });
+            const templateGrabber = async () => {
+              await db
+                .ref()
+                .child('/Courses/')
+                .once('value', (templateSnapshot) => {
+                  template = templateSnapshot.val();
+                });
+              await db
+                .ref()
+                .child(`/users/${userId}`)
+                .child('/Courses/')
+                .set(template);
+            };
+            templateGrabber();
           }
         });
     }

@@ -5,6 +5,8 @@ import usePrevious from '../usePrevious';
 const LessonCard = (props) => {
   const [loadLessons, setLoadLessons] = useState(true);
   const [loadAuthlessLessons, setLoadAuthlessLessons] = useState([]);
+  const [lessonValues, setLessonValues] = useState([]);
+  const [lessonNames, setLessonNames] = useState([]);
 
   const prevUserId = usePrevious(props.userId);
 
@@ -12,46 +14,70 @@ const LessonCard = (props) => {
   let authlessLessons;
   let choice;
 
-  const updateDatabase = async (lesson) => {
+  const updateDatabase = async (lesson, section) => {
     const specificLesson = {};
-    if (props.foundationsProgress[0][lesson] === false) {
-      specificLesson[lesson] = true;
+    let indexFinder = lessonNames.indexOf(lesson);
+    if (lessonValues[indexFinder] === false) {
+      specificLesson[lessonNames[indexFinder]] = true;
       props.changePercentage('+');
     } else {
-      specificLesson[lesson] = false;
+      specificLesson[lessonNames[indexFinder]] = false;
       props.changePercentage('-');
     }
-    await props.updater(specificLesson);
+    await props.updater(specificLesson, section);
     setLoadLessons(true);
   };
 
   const buttonUpdater = () => {
-    lessons = props.lessons.map((item) => {
+    let arrOfLessonValues = [];
+    let arrOfLessonNames = [];
+    for (const value in props.foundationsProgress) {
+      arrOfLessonValues.push(props.foundationsProgress[value]);
+      arrOfLessonNames.push(value);
+    }
+    lessons = arrOfLessonValues.map((item, index) => {
       if (
         props.foundationsProgress !== '' &&
         props.foundationsProgress.length !== 0
       ) {
-        if (props.foundationsProgress[0][item] === false) {
-          choice = <button onClick={() => updateDatabase(item)}>Mark</button>;
+        // if (props.foundationsProgress[0][item] === false) {
+        if (item === false) {
+          choice = (
+            <button
+              onClick={() =>
+                updateDatabase(arrOfLessonNames[index], props.sectionTitles)
+              }
+            >
+              Mark
+            </button>
+          );
         } else {
-          choice = <button onClick={() => updateDatabase(item)}>Unmark</button>;
+          choice = (
+            <button
+              onClick={() =>
+                updateDatabase(arrOfLessonNames[index], props.sectionTitles)
+              }
+            >
+              Unmark
+            </button>
+          );
         }
       } else {
         choice = 'no';
       }
 
       return (
-        <div key={item} className="lesson">
-          <li>{item}</li>
+        <div key={arrOfLessonNames[index]} className="lesson">
+          <li>{arrOfLessonNames[index]}</li>
           {choice}
         </div>
       );
     });
 
-    authlessLessons = props.lessons.map((item) => {
+    authlessLessons = arrOfLessonValues.map((item, index) => {
       return (
-        <div key={item} className="lesson">
-          <li>{item}</li>
+        <div key={arrOfLessonNames[index]} className="lesson">
+          <li>{arrOfLessonNames[index]}</li>
         </div>
       );
     });
@@ -59,12 +85,14 @@ const LessonCard = (props) => {
     if (loadLessons === true && choice !== 'no') {
       setLoadLessons(lessons);
       setLoadAuthlessLessons(authlessLessons);
-    } else {
+      setLessonValues(arrOfLessonValues);
+      setLessonNames(arrOfLessonNames);
     }
   };
 
-  buttonUpdater();
-
+  if (props.foundationsProgress !== undefined) {
+    buttonUpdater();
+  }
   useEffect(() => {
     if (prevUserId !== props.userId || props.reload === true) {
       setLoadLessons(true);
