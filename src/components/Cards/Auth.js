@@ -2,30 +2,7 @@ import React, { useState } from 'react';
 import { auth, fireb, db } from '../../services/firebase';
 
 const Auth = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [userId, setUserId] = useState(false);
-
-  const handleChange = (event) => {
-    switch (event.target.name) {
-      case 'username':
-        setUsername(event.target.value);
-        break;
-      case 'password':
-        setPassword(event.target.value);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const signUp = () => {
-    auth.createUserWithEmailAndPassword(username, password);
-  };
-
-  const login = () => {
-    auth.signInWithEmailAndPassword(username, password);
-  };
 
   const signOut = () => {
     auth.signOut();
@@ -72,30 +49,6 @@ const Auth = () => {
 
   return (
     <div>
-      {/* {userId === false && (
-        <label>
-          Username:
-          <input
-            type="text"
-            name="username"
-            value={username}
-            onChange={(event) => handleChange(event)}
-          />
-        </label>
-      )}
-      {userId === false && (
-        <label>
-          Password:
-          <input
-            type="text"
-            name="password"
-            value={password}
-            onChange={(event) => handleChange(event)}
-          />
-        </label>
-      )}
-      {userId === false && <button onClick={signUp}>Sign up</button>}
-      {userId === false && <button onClick={login}>Sign in</button>} */}
       {userId && <button onClick={signOut}>Sign out</button>}
       {userId === false && (
         <button onClick={signUpGoogle}>Sign in with Google</button>
