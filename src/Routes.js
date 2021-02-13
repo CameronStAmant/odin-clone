@@ -5,7 +5,7 @@ import Curriculum from './components/Curriculum';
 import FoundationsPathCourses from './components/FoundationsPathCourses';
 import FoundationsCourse from './components/FoundationsCourse';
 import JavaScriptPathCourses from './components/JavaScriptPathCourses';
-// import JavaScriptCourse from './components/JavaScriptCourse';
+import JavaScriptCourse from './components/JavaScriptCourse';
 
 const Routes = () => {
   return (
@@ -29,7 +29,7 @@ const Routes = () => {
           component={JavaScriptPathCourses}
         />
 
-        {/* <Route exact path="/courses/javascript" component={JavaScriptCourse} /> */}
+        <Route exact path="/courses/javascript" component={JavaScriptCourse} />
       </Switch>
     </BrowserRouter>
   );

@@ -31,15 +31,12 @@ const LessonCard = (props) => {
   const buttonUpdater = () => {
     let arrOfLessonValues = [];
     let arrOfLessonNames = [];
-    for (const value in props.foundationsProgress) {
-      arrOfLessonValues.push(props.foundationsProgress[value]);
+    for (const value in props.courseProgress) {
+      arrOfLessonValues.push(props.courseProgress[value]);
       arrOfLessonNames.push(value);
     }
     lessons = arrOfLessonValues.map((item, index) => {
-      if (
-        props.foundationsProgress !== '' &&
-        props.foundationsProgress.length !== 0
-      ) {
+      if (props.courseProgress !== '' && props.courseProgress.length !== 0) {
         if (item === false) {
           choice = (
             <button
@@ -67,7 +64,7 @@ const LessonCard = (props) => {
 
       return (
         <div key={arrOfLessonNames[index]} className="lesson">
-          <li>{arrOfLessonNames[index]}</li>
+          <ul>{arrOfLessonNames[index]}</ul>
           {choice}
         </div>
       );
@@ -76,7 +73,7 @@ const LessonCard = (props) => {
     authlessLessons = arrOfLessonValues.map((item, index) => {
       return (
         <div key={arrOfLessonNames[index]} className="lesson">
-          <li>{arrOfLessonNames[index]}</li>
+          <ul>{arrOfLessonNames[index]}</ul>
         </div>
       );
     });
@@ -89,14 +86,14 @@ const LessonCard = (props) => {
     }
   };
 
-  if (props.foundationsProgress !== undefined) {
+  if (props.courseProgress !== undefined) {
     buttonUpdater();
   }
   useEffect(() => {
     if (prevUserId !== props.userId || props.reload === true) {
       setLoadLessons(true);
     }
-  }, [prevUserId, props.userId, props.reload, props.prevFoundationsProgress]);
+  }, [prevUserId, props.userId, props.reload, props.prevCourseProgress]);
 
   return (
     <div className="lessonCard">
