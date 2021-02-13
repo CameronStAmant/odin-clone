@@ -72,7 +72,7 @@ const Auth = () => {
 
   return (
     <div>
-      {userId === false && (
+      {/* {userId === false && (
         <label>
           Username:
           <input
@@ -95,9 +95,11 @@ const Auth = () => {
         </label>
       )}
       {userId === false && <button onClick={signUp}>Sign up</button>}
-      {userId === false && <button onClick={login}>Sign in</button>}
+      {userId === false && <button onClick={login}>Sign in</button>} */}
       {userId && <button onClick={signOut}>Sign out</button>}
-      {userId === false && <button onClick={signUpGoogle}>Google</button>}
+      {userId === false && (
+        <button onClick={signUpGoogle}>Sign in with Google</button>
+      )}
       {userId === false && (
         <button onClick={signUpAnonymously}>Sign up anonymously</button>
       )}

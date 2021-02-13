@@ -7,7 +7,6 @@ const PathCard = (props) => {
       <div className="pathTop">
         <div>
           <div className="pathName">{props.name}</div>
-          <div>Start here!</div>
         </div>
         <Link to={props.path}>
           <button>View {props.tag}</button>

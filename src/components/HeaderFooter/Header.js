@@ -5,15 +5,16 @@ import Auth from '../Cards/Auth';
 const Header = () => {
   return (
     <div className="header">
-      <Link to="/">
-        <div className="headerLeft">The Odin Project</div>
-      </Link>
-
-      <div className="headerRight">
-        <Link to="/curriculum">
-          <div>Curriculum</div>
+      <div className="headerLeft">
+        <Link to="/">
+          <div className="headerLeft"> The Odin Project </div>
         </Link>
-        <div>|</div>
+        <Link to="/curriculum">
+          <div> Curriculum </div>
+        </Link>
+        {/* </div> */}
+
+        {/* <div className="headerRight"> */}
         <Auth />
       </div>
     </div>
