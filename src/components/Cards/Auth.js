@@ -4,7 +4,7 @@ import { auth, fireb, db } from '../../services/firebase';
 const Auth = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  let userId;
+  const [userId, setUserId] = useState(false);
 
   const handleChange = (event) => {
     switch (event.target.name) {
@@ -39,7 +39,7 @@ const Auth = () => {
   auth.onAuthStateChanged((firebaseUser) => {
     let template;
     if (firebaseUser) {
-      userId = auth.currentUser.uid;
+      setUserId(auth.currentUser.uid);
       db.ref()
         .child(`/users/${userId}`)
         .once('value', (snapshot) => {
@@ -61,6 +61,8 @@ const Auth = () => {
             templateGrabber();
           }
         });
+    } else {
+      setUserId(false);
     }
   });
 
@@ -70,29 +72,35 @@ const Auth = () => {
 
   return (
     <div>
-      <label>
-        Username:
-        <input
-          type="text"
-          name="username"
-          value={username}
-          onChange={(event) => handleChange(event)}
-        />
-      </label>
-      <label>
-        Password:
-        <input
-          type="text"
-          name="password"
-          value={password}
-          onChange={(event) => handleChange(event)}
-        />
-      </label>
-      <button onClick={signUp}>Sign up</button>
-      <button onClick={login}>Sign in</button>
-      <button onClick={signOut}>Sign out</button>
-      <button onClick={signUpGoogle}>Google</button>
-      <button onClick={signUpAnonymously}>Sign up anonymously</button>
+      {userId === false && (
+        <label>
+          Username:
+          <input
+            type="text"
+            name="username"
+            value={username}
+            onChange={(event) => handleChange(event)}
+          />
+        </label>
+      )}
+      {userId === false && (
+        <label>
+          Password:
+          <input
+            type="text"
+            name="password"
+            value={password}
+            onChange={(event) => handleChange(event)}
+          />
+        </label>
+      )}
+      {userId === false && <button onClick={signUp}>Sign up</button>}
+      {userId === false && <button onClick={login}>Sign in</button>}
+      {userId && <button onClick={signOut}>Sign out</button>}
+      {userId === false && <button onClick={signUpGoogle}>Google</button>}
+      {userId === false && (
+        <button onClick={signUpAnonymously}>Sign up anonymously</button>
+      )}
     </div>
   );
 };

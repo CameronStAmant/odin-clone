@@ -14,7 +14,6 @@ const Header = () => {
           <div>Curriculum</div>
         </Link>
         <div>|</div>
-        <div>Sign Up</div>
         <Auth />
       </div>
     </div>
